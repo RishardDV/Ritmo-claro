@@ -17,6 +17,8 @@ export class HabitosService {
       data: {
         nombre: dto.nombre,
         descripcion: dto.descripcion,
+        estado: dto.estado ?? 'ACTIVO',
+        frecuencia: dto.frecuencia ?? 'DIARIA',
         actorId,
       },
     });

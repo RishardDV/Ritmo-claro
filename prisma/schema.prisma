@@ -12,6 +12,19 @@ enum Role {
   ADMIN
 }
 
+enum Estado {
+  ACTIVO
+  PAUSADO
+  ARCHIVADO
+}
+
+enum Frecuencia {
+  DIARIA
+  SEMANAL
+  MENSUAL
+}
+
+
 model Actores {
   id        Int       @id @default(autoincrement())
   nombre    String
@@ -28,6 +41,9 @@ model Habitos {
   id          Int      @id @default(autoincrement())
   nombre      String
   descripcion String?
+  estado      Estado     @default(ACTIVO)
+  frecuencia  Frecuencia @default(DIARIA)
+  
   actorId     Int
   actor       Actores  @relation(fields: [actorId], references: [id], onDelete: Cascade)
   creadoEn    DateTime @default(now())
