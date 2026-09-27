@@ -20,4 +20,4 @@ RUN DATABASE_URL="postgresql://prisma:prisma@localhost:5432/prisma" npx prisma g
 EXPOSE 3000
 
 # En ejecución usa DATABASE_URL y PORT inyectadas por el entorno real
-CMD ["sh", "-c", "npx prisma migrate deploy && node dist/src/main.js"]
+CMD ["sh", "-c", "npx prisma migrate deploy && node dist/main.js"]
