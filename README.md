@@ -1,99 +1,230 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Ritmo Claro API
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+## Problema
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+Ritmo claro tiene varios problemas, entre esos consiste en:
 
-## Description
+Manejan el sistema de información de los hábitos a través de formularios y hojas compartidas de forma básica para sus empleados, para ello persisten algunas situaciones como:
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+- Autenticación inválida: la gente puede hacer y deshacer como quiera sin tener una cuenta válida, y también se confunden los roles, por lo que un visitante puede hacer lo que hace un soporte.
+- Correos duplicados: gente con el mismo correo y el sistema actual no lo detecta.
+- También solo la persona que tiene ese formulario y hoja compartida funciona desde un computador.
 
-## Project setup
+## Alcance
+
+### Personas usuarias
+
+#### VISITANTE
+
+- Requisito: el visitante solo puede crear una cuenta o iniciar sesión.
+
+#### USUARIO
+
+- Requisito: el usuario podrá organizar sus propios hábitos con privacidad.
+- Crear, consultar, editar y eliminar sus hábitos.
+
+#### ADMIN
+
+- Requisito: el admin podrá atender los casos y revisar el estado general de las personas.
+- Administrar y consultar los hábitos de todas las personas.
+
+### Historias de usuario
+
+#### VISITANTE
+
+- Como visitante quiero crear mi cuenta para poder tener acceso al sistema.
+- Como visitante quiero iniciar sesión para acceder a las opciones disponibles para mí.
+
+#### USUARIO
+
+- Como usuario quiero crear mis propios hábitos para tener una organización de ellos.
+- Como usuario quiero consultar cada uno de mis hábitos para ver cuáles tengo.
+- Como usuario me gustaría editar o actualizar alguna información de mis hábitos.
+- Como usuario quiero eliminar algunos hábitos que ya no estoy colocando en marcha.
+
+#### ADMIN
+
+- Como admin quiero administrar cada uno de los hábitos de las personas.
+- Como admin quiero consultar todos los hábitos para ver el estado general y atender los casos.
+
+## Arquitectura
+
+La solución está construida con:
+
+- NestJS + TypeScript
+- Prisma ORM
+- PostgreSQL
+- JWT para autenticación
+- Swagger para documentación de endpoints
+- Docker para entorno reproducible
+
+## URLs y documentación
+
+- API local: http://localhost:3000
+- Swagger: http://localhost:3000/docs
+- Swagger JSON: http://localhost:3000/docs-json
+
+## Instalación local
+
+1. Clona el repositorio.
+2. Entra a la carpeta del proyecto:
 
 ```bash
-$ npm install
+cd ritmo-claro-api
 ```
 
-## Compile and run the project
+3. Instala dependencias:
 
 ```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+npm install
 ```
 
-## Run tests
+4. Crea un archivo `.env` en la raíz del proyecto con las variables requeridas.
+
+## Variables requeridas
+
+```env
+PORT=3000
+DATABASE_URL="postgresql://usuario:password@localhost:5432/ritmo_claro"
+JWT_SECRET="tu_clave_secreta_muy_segura"
+JWT_EXPIRES_IN="1d"
+```
+
+Ejemplo de configuración local para PostgreSQL:
+
+```env
+PORT=3000
+DATABASE_URL="postgresql://postgres:postgres@localhost:5432/ritmo_claro"
+JWT_SECRET="ritmo-claro-secret"
+JWT_EXPIRES_IN="1d"
+```
+
+> Si usas un plan gratuito de base de datos o hosting, es posible que la activación tarde unos minutos. En ese caso, espera a que el servicio quede listo antes de volver a probar la conexión.
+
+## Base de datos y migración
+
+Genera el cliente de Prisma y aplica migraciones:
 
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+npx prisma generate
+npx prisma migrate dev
 ```
 
-## Deployment
-
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+Si solo necesitas sincronizar el esquema localmente:
 
 ```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+npx prisma db push
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+## Ejecutar la API
 
-## Resources
+Modo desarrollo:
 
-Check out a few resources that may come in handy when working with NestJS:
+```bash
+npm run start:dev
+```
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+Modo normal:
 
-## Support
+```bash
+npm run start
+```
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+Build de producción:
 
-## Stay in touch
+```bash
+npm run build
+npm run start:prod
+```
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+## Cómo ejecutar la colección / pruebas
 
-## License
+Puedes probar la API desde Postman, Insomnia o Thunder Client importando la colección del proyecto o ejecutando las peticiones manualmente.
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
-# Ritmo-real
+Flujo recomendado de prueba:
+
+1. Registrar usuario:
+   - `POST /auth/register`
+2. Iniciar sesión:
+   - `POST /auth/login`
+3. Copiar el token JWT del response.
+4. Enviar el token en el header `Authorization: Bearer <token>`.
+5. Probar endpoints de hábitos:
+   - `POST /habitos`
+   - `GET /habitos`
+   - `GET /habitos/:id`
+   - `PATCH /habitos/:id`
+   - `DELETE /habitos/:id`
+
+También puedes abrir Swagger para probar los endpoints desde la interfaz visual:
+
+```text
+http://localhost:3000/docs
+```
+
+## Pruebas
+
+Ejecutar pruebas unitarias:
+
+```bash
+npm test
+```
+
+Ejecutar pruebas e2e:
+
+```bash
+npm run test:e2e
+```
+
+Cobertura:
+
+```bash
+npm run test:cov
+```
+
+## Docker
+
+Ejemplo básico:
+
+```bash
+docker build -t ritmo-claro-api .
+docker run -p 3000:3000 --env-file .env ritmo-claro-api
+```
+
+## Deploy
+
+Para desplegar la API en un servidor o plataforma cloud, asegúrate de configurar estas variables de entorno en producción:
+
+- `PORT`
+- `DATABASE_URL`
+- `JWT_SECRET`
+- `JWT_EXPIRES_IN`
+
+Luego compila la aplicación:
+
+```bash
+npm run build
+npm run start:prod
+```
+
+## Rutas principales
+
+| Rol | Método | Endpoint | Descripción |
+|---|---|---|---|
+| Visitante | POST | `/auth/register` | Crear cuenta |
+| Visitante | POST | `/auth/login` | Iniciar sesión |
+| Usuario | POST | `/habitos` | Crear hábito |
+| Usuario | GET | `/habitos` | Listar hábitos propios |
+| Usuario | GET | `/habitos/:id` | Ver hábito propio |
+| Usuario | PATCH | `/habitos/:id` | Actualizar hábito |
+| Usuario | DELETE | `/habitos/:id` | Eliminar hábito |
+| Admin | GET | `/habitos/admin/todos` | Ver todos los hábitos |
+
+## Notas finales
+
+- La documentación interactiva queda en Swagger para facilitar pruebas y validación.
+- La API está preparada para funcionar con autentificación por JWT y control de permisos por rol.
+- La colección de pruebas puede ejecutarse desde Postman o cualquier cliente HTTP compatible.
+
+
+
